@@ -1,12 +1,13 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const { stringsRegex, dateRegex } = require('../utils/validation');
 
 const articleSchema = mongoose.Schema({
   keyword: {
     type: String,
     validate: {
       validator(v) {
-        return /^[a-zA-Z0-9 ,.'-]+$/.test(v);
+        return stringsRegex.test(v);
       },
       message: (props) => `${props.value} is not a valid keyword`,
     },
@@ -16,7 +17,7 @@ const articleSchema = mongoose.Schema({
     type: String,
     validate: {
       validator(v) {
-        return /^[a-zA-Z0-9 ,.'-]+$/.test(v);
+        return stringsRegex.test(v);
       },
       message: (props) => `${props.value} is not a valid title`,
     },
@@ -26,7 +27,7 @@ const articleSchema = mongoose.Schema({
     type: String,
     validate: {
       validator(v) {
-        return /^[a-zA-Z0-9 ,.'-]+$/.test(v);
+        return stringsRegex.test(v);
       },
       message: (props) => `${props.value} is not a valid text`,
     },
@@ -36,7 +37,7 @@ const articleSchema = mongoose.Schema({
     type: String,
     validate: {
       validator(v) {
-        return /^\d{2}[./-]\d{2}[./-]\d{4}$/.test(v);
+        return validator.isISO8601(v) || dateRegex.test(v);
       },
       message: (props) => `${props.value} is not a valid date`,
     },
@@ -46,7 +47,7 @@ const articleSchema = mongoose.Schema({
     type: String,
     validate: {
       validator(v) {
-        return /^[a-zA-Z0-9 ,.'-]+$/.test(v);
+        return stringsRegex.test(v);
       },
       message: (props) => `${props.value} is not a valid source`,
     },

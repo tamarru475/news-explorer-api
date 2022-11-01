@@ -2,18 +2,20 @@ const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const limiter = require('./rateLimit');
+const { celebrate, Joi, errors } = require('celebrate');
+const limiter = require('./config/rateLimit');
 const mainRouter = require('./routes/index');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middleware/auth');
-const { celebrate, Joi, errors } = require('celebrate');
 const centralizedError = require('./middleware/centralizedErrors');
 const { requestLogger, errorLogger } = require('./middleware/logger');
+const NotFoundError = require('./errors/not-found-error');
+const {
+  resourceNotFoundMessage,
+} = require('./utils/constants');
 
 require('dotenv').config({ path: '../.env' });
-
-const { MONGODB_URI = 'mongodb://localhost:27017/newsexplorer' } = process.env;
-const { PORT = 3000 } = process.env;
+const { MONGODB_URI, PORT } = require('./config/config');
 
 const app = express();
 mongoose.connect(MONGODB_URI);
@@ -45,6 +47,11 @@ app.post('/signin', celebrate({
 app.use(auth);
 
 app.use('/', mainRouter);
+
+app.use((req, res, next) => {
+  const error = new NotFoundError(resourceNotFoundMessage);
+  next(error);
+});
 
 app.use(errorLogger);
 

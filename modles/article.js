@@ -1,13 +1,13 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
-const { stringsRegex, dateRegex } = require('../utils/validation');
+const { articlesRegex, dateRegex } = require('../utils/validation');
 
 const articleSchema = mongoose.Schema({
   keyword: {
     type: String,
     validate: {
       validator(v) {
-        return stringsRegex.test(v);
+        return articlesRegex.test(v);
       },
       message: (props) => `${props.value} is not a valid keyword`,
     },
@@ -17,7 +17,7 @@ const articleSchema = mongoose.Schema({
     type: String,
     validate: {
       validator(v) {
-        return stringsRegex.test(v);
+        return articlesRegex.test(v);
       },
       message: (props) => `${props.value} is not a valid title`,
     },
@@ -27,7 +27,7 @@ const articleSchema = mongoose.Schema({
     type: String,
     validate: {
       validator(v) {
-        return stringsRegex.test(v);
+        return articlesRegex.test(v);
       },
       message: (props) => `${props.value} is not a valid text`,
     },
@@ -47,7 +47,7 @@ const articleSchema = mongoose.Schema({
     type: String,
     validate: {
       validator(v) {
-        return stringsRegex.test(v);
+        return articlesRegex.test(v);
       },
       message: (props) => `${props.value} is not a valid source`,
     },
